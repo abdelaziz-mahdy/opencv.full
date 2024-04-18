@@ -3,12 +3,10 @@ from conan import ConanFile
 from conan.api.output import ConanOutput, Color
 from conan.errors import ConanInvalidConfiguration, ConanException
 from conan.tools.cmake import cmake_layout, CMake, CMakeToolchain, CMakeDeps
-from conan.tools.files import chdir, mkdir, copy
 from conan.tools.scm import Git
 from conan.tools.microsoft import is_msvc, is_msvc_static_runtime
 import tarfile
 from pathlib import Path
-import yaml
 
 OPENCV_VERSION = "4.9.0"
 
@@ -19,6 +17,7 @@ arch_map = {
     },
     "linux": {
         "x86_64": "x64",
+        "armv8": "arm64",
     },
     "android": {
         "x86_64": "x86_64",
@@ -361,12 +360,16 @@ class OcvDartDesktop(ConanFile):
         self.opencv_contrib_repo = os.path.join(root, "build", "opencv_contrib")
         git = Git(self)
         if not os.path.exists(self.opencv_repo):
-            git.clone("https://github.com/opencv/opencv.git", self.opencv_repo, [f"-b {OPENCV_VERSION}"])
+            git.clone(
+                "https://github.com/opencv/opencv.git",
+                self.opencv_repo,
+                [f"-b {OPENCV_VERSION}"],
+            )
         if not os.path.exists(self.opencv_contrib_repo):
             git.clone(
                 "https://github.com/opencv/opencv_contrib.git",
                 self.opencv_contrib_repo,
-                [f"-b {OPENCV_VERSION}"]
+                [f"-b {OPENCV_VERSION}"],
             )
 
     def build_requirements(self):
@@ -402,7 +405,6 @@ class OcvDartDesktop(ConanFile):
             cmake.build(target="install")
         else:
             ConanOutput().writeln("Skipping opencv build...", fg=Color.YELLOW)
-        ocv_install_dir = self.opencv_dir(self.install_folder)
 
         self.post_build()
 
