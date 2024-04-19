@@ -375,7 +375,8 @@ class OcvDartDesktop(ConanFile):
     def build_requirements(self):
         self.tool_requires("cmake/3.28.1")
         self.tool_requires("nasm/2.16.01")
-        # self.tool_requires("ccache/4.9.1")
+        if self.settings.os == "Linux" and self.settings.arch == "armv8":
+            self.tool_requires("ffmpeg/6.1")
         if self.settings.os != "Windows":
             self.tool_requires("ninja/1.11.1")
 
