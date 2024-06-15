@@ -171,7 +171,7 @@ class OcvDartDesktop(ConanFile):
         "with_cudnn": False,
         "with_eigen": False,
         "with_opencl": True,
-        "with_openvino": False,
+        "with_openvino": True,
         "with_obsensor": False,
         "with_ipp": "opencv-icv",
         "with_protobuf": True,
@@ -254,7 +254,7 @@ class OcvDartDesktop(ConanFile):
         tc.variables["BUILD_PNG"] = True
         tc.variables["BUILD_TIFF"] = True
         tc.variables["BUILD_WEBP"] = True
-        tc.variables["BUILD_TBB"] = False
+        tc.variables["BUILD_TBB"] = True
         tc.variables["OPENCV_FORCE_3RDPARTY_BUILD"] = False
         tc.variables["OPENCV_PYTHON_SKIP_DETECTION"] = True
         tc.variables["BUILD_opencv_python2"] = False
@@ -286,9 +286,9 @@ class OcvDartDesktop(ConanFile):
         tc.variables["WITH_OPENCL"] = (
             False if self.settings.os == "iOS" else self.get_bool("with_opencl", False)
         )
-        tc.variables["WITH_OPENCLAMDBLAS"] = False
-        tc.variables["WITH_OPENCLAMDFFT"] = False
-        tc.variables["WITH_OPENCL_SVM"] = False
+        tc.variables["WITH_OPENCLAMDBLAS"] = True
+        tc.variables["WITH_OPENCLAMDFFT"] = True
+        tc.variables["WITH_OPENCL_SVM"] = True
         tc.variables["WITH_OPENGL"] = False
         tc.variables["WITH_OPENNI"] = False
         tc.variables["WITH_OPENNI2"] = self.get_bool("with_openni2", False)
@@ -326,7 +326,7 @@ class OcvDartDesktop(ConanFile):
         tc.variables["OPENCV_ENABLE_NONFREE"] = self.get_bool("nonfree", False)
         tc.variables["ENABLE_NEON"] = self.get_bool("neon", False)
         tc.variables["OPENCV_DNN_CUDA"] = self.get_bool("dnn_cuda", False)
-        tc.variables["WITH_OPENVINO"] = False
+        tc.variables["WITH_OPENVINO"] = self.get_bool("with_openvino", False)
         tc.variables["WITH_OBSENSOR"] = self.get_bool("with_obsensor", False)
         tc.variables["WITH_AVIF"] = self.get_bool("with_avif", False)
         tc.variables["BUILD_opencv_world"] = self.get_bool("world", False)
@@ -376,6 +376,7 @@ class OcvDartDesktop(ConanFile):
         # self.tool_requires("ccache/4.9.1")
         if self.settings.os != "Windows":
             self.tool_requires("ninja/1.11.1")
+        # self.tool_requires("openvino/2024.1.0")
 
     def layout(self):
         base = Path("build") / str(self.settings.os) / str(self.settings.arch)
